@@ -24,13 +24,12 @@ function tmux_workspaces() {
         done
     fi
 
-    SESSION_KEY=$(echo -e "${workspaces}" | awk '!seen[$0]++' | fzf)
-
-    if [ -n "$SESSION_KEY" ]; then
-        if ! tmux has-session -t "$SESSION_KEY" 2>/dev/null; then
-            tmux new-session -d -s "$SESSION_KEY" -c "$SESSION_KEY"
+    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | fzf)
+    if [ -n "$session_id" ]; then
+        if ! tmux has-session -t "$session_id" 2>/dev/null; then
+            tmux new-session -d -s "$session_id" -c "$session_id"
         fi
-        tmux switch-client -t "$SESSION_KEY"
+        tmux switch-client -t "$session_id"
 
     else
         tmux display-message "something strange in your neighbourhood!"

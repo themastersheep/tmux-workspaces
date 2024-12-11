@@ -72,5 +72,12 @@ Example:
 
     set -g @tmux_workspaces_path "/home/user/docs:/home/user/tmp"
 
+* `@tmux_workspaces_fzf_options`
+  * Configure `fzf` behavior / options
+
+Example:
+
+    set -g @tmux_workspaces_fzf_options "--reverse --bind ctrl-j:jump-accept"
+
 #### License
 [MIT](LICENSE)

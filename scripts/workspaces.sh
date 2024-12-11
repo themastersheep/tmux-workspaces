@@ -24,7 +24,9 @@ function tmux_workspaces() {
         done
     fi
 
-    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | fzf)
+    local fzf_options=$(tmux show-option -gqv @tmux_workspaces_fzf_options)
+
+    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | fzf $fzf_options)
     if [ -n "$session_id" ]; then
         if ! tmux has-session -t "$session_id" 2>/dev/null; then
             tmux new-session -d -s "$session_id" -c "$session_id"

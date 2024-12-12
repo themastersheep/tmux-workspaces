@@ -20,6 +20,7 @@ Before using the plugin, ensure the following dependencies are installed:
 * `tmux` (>= 2.1): Terminal multiplexer.
 * `fzf`: Command-line fuzzy finder.
 * `bash`: Required to run the script.
+* `awk`: Required to parse @tmux_workspaces_bind_options
 * Optional: Directory paths configured in @tmux_workspaces_find_in_path or @tmux_workspaces_path.
 
 
@@ -73,11 +74,19 @@ Example:
     set -g @tmux_workspaces_path "/home/user/docs:/home/user/tmp"
 
 * `@tmux_workspaces_fzf_options`
-  * Configure `fzf` behavior / options
+  * Configure `fzf` options
 
 Example:
 
-    set -g @tmux_workspaces_fzf_options "--reverse --bind ctrl-j:jump-accept"
+    set -g @tmux_workspaces_fzf_options "--reverse"
+
+* `@tmux_workspaces_fzf_bind_options`
+  * Configure `fzf` bind arguments
+  * This supports a comma delimited list of values, format: key:action
+
+Example:
+
+    set -g @tmux_workspaces_fzf_bind_options "ctrl-j:jump-accept,ctrl-x:become(nvim {})"
 
 #### License
 [MIT](LICENSE)

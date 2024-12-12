@@ -24,9 +24,15 @@ function tmux_workspaces() {
         done
     fi
 
-    local fzf_options=$(tmux show-option -gqv @tmux_workspaces_fzf_options)
+    local bind_opts=$(tmux show-options -gqv @tmux_workspaces_fzf_bind_options)
+    if [ -n "$bind_opts" ]; then
+        # Parse the variable into separate --bind arguments with single quotes
+        bind_args=$(echo "$bind_opts" | awk -F, '{for (i=1; i<=NF; i++) printf("--bind '\''%s'\'' ", $i)}')
+    fi
 
-    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | fzf $fzf_options)
+    local fzf_opts=$(tmux show-option -gqv @tmux_workspaces_fzf_options)
+
+    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | eval "fzf $fzf_opts $bind_args")
     if [ -n "$session_id" ]; then
         if ! tmux has-session -t "$session_id" 2>/dev/null; then
             tmux new-session -d -s "$session_id" -c "$session_id"

@@ -47,7 +47,7 @@ Clone the repo:
 
 Add this line to the bottom of `.tmux.conf`:
 
-    run-shell ~/clone/path/scratch.tmux
+    run-shell ~/clone/path/workspaces.tmux
 
 Reload TMUX environment with: `$ tmux source-file ~/.tmux.conf`
 

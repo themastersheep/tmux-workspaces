@@ -4,6 +4,8 @@ A simple `tmux` plugin for efficiently managing and switching between workspaces
 
 Create, or switch to a "workspace" from configured source code / project paths.  A workspace / tmux session is created, named using the selected path.  With a simple tmux key binding, find and jump to where you want to go using fzf, and create or open an existing session.
 
+tmux-workspaces opens in a tmux popup window, so you quickly context switch without needing to worry about where you were, the session is switched leaving the previous exactly where it was.
+
 #### Features
 * List Current Sessions: Displays active `tmux` sessions for quick switching.
 * Dynamic Workspace Discovery: Searches specified directories for workspace paths.

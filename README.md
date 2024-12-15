@@ -2,6 +2,8 @@
 
 A simple `tmux` plugin for efficiently managing and switching between workspaces. The plugin leverages the `fzf` fuzzy finder for an intuitive selection interface and integrates custom configurations for workspace discovery.
 
+Create, or switch to a "workspace" from configured source code / project paths.  A workspace / tmux session is created, named using the selected path.  With a simple tmux key binding, find and jump to where you want to go using fzf, and create or open an existing session.
+
 #### Features
 * List Current Sessions: Displays active `tmux` sessions for quick switching.
 * Dynamic Workspace Discovery: Searches specified directories for workspace paths.

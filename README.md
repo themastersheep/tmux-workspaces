@@ -1,10 +1,14 @@
 # tmux-workspaces
 
-A simple `tmux` plugin for efficiently managing and switching between workspaces. The plugin leverages the `fzf` fuzzy finder for an intuitive selection interface and integrates custom configurations for workspace discovery.
+A simple `tmux` plugin for efficiently managing and switching between workspaces.
 
-Create, or switch to a "workspace" from configured source code / project paths.  A workspace / tmux session is created, named using the selected path.  With a simple tmux key binding, find and jump to where you want to go using fzf, and create or open an existing session.
+Open a workspace, create windows and panes within that workspace.  Time for a context switch?  Open another workspace, create more windows and panes within that workspace.  Ready to switch back?  Reopen any workspace and find it *exactly* as you left it (mid command)!!
 
-tmux-workspaces opens in a tmux popup window, so you quickly context switch without needing to worry about where you were, the session is switched leaving the previous exactly where it was.
+The plugin leverages the `fzf` fuzzy finder for an intuitive selection interface, inside a popip window so there's no need to worry about where you are, or what you are doing.  Configure the locations for where workspaces can be discovered.
+
+A workspace, is just a tmux session, its name and base path uses the selected workspace location.  Every window / pane created within that workspace has the same base path.  
+
+Open `tmux-workspaces` find where you want to go, create or return to a workspace.
 
 #### Features
 * List Current Sessions: Displays active `tmux` sessions for quick switching.

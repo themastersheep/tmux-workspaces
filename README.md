@@ -19,7 +19,7 @@ Open `tmux-workspaces` find where you want to go, create or return to a workspac
 
 #### Key Bindings
 
-* Default Key Binding: prefix + p
+* [Configurable](#configuration) Key Binding, default: "prefix + p"
   * Opens the workspaces interface in a tmux popup.
 
 #### Dependencies
@@ -66,6 +66,16 @@ required.
 #### Configuration
 
 The plugin supports the following configuration options:
+
+* `@tmux_workspaces_key_bind`
+  * Optional key bind to open `tmux-workspaces`, uses "prefix-<key>" (default: p).
+
+Example:
+
+The following configures `tmux-workspaces` to open with "prefix-x".
+
+    set -g @tmux_workspaces_key_bind "x"
+
 
 * `@tmux_workspaces_find_in_path`
   * A colon-separated list of directories to recursively search for workspaces.

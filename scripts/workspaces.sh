@@ -1,5 +1,25 @@
 #!/usr/bin/env bash
 
+function new_session() {
+
+    local path=$1
+    if [ -z "$path" ]; then
+        tmux display-message "something strange in your neighbourhood!"
+        return
+    fi
+
+    # tmux replaces "." with "_" when creating sessions
+    # do the replacement ourselves to ensure we can switch
+    # to the newly created session
+    local session_id=${path//./_}
+
+    if ! tmux has-session -t "$session_id" 2>/dev/null; then
+        tmux new-session -d -s "$session_id" -c "$path"
+    fi
+
+    tmux switch-client -t "$session_id"
+}
+
 function tmux_workspaces() {
 
     local workspaces=$(tmux list-sessions -F "#{session_name}" 2>/dev/null)
@@ -33,15 +53,7 @@ function tmux_workspaces() {
     local fzf_opts=$(tmux show-option -gqv @tmux_workspaces_fzf_options)
 
     local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | eval "fzf $fzf_opts $bind_args")
-    if [ -n "$session_id" ]; then
-        if ! tmux has-session -t "$session_id" 2>/dev/null; then
-            tmux new-session -d -s "$session_id" -c "$session_id"
-        fi
-        tmux switch-client -t "$session_id"
-
-    else
-        tmux display-message "something strange in your neighbourhood!"
-    fi
+    new_session $session_id
 }
 
 tmux_workspaces

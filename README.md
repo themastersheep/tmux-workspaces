@@ -86,6 +86,7 @@ Example:
 
 * `@tmux_workspaces_path`
   * A colon-separated list of directories to include as workspaces without recursion.
+  * Each value can present a filter pattern (",filter") passed to the "-name" flag of the underlying `find` command (e.g. /a/path,fitler)
 
 Example:
 

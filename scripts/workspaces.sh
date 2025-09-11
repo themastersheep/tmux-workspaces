@@ -14,6 +14,11 @@ function new_session() {
     local session_id=${path//./_}
 
     if ! tmux has-session -t "$session_id" 2>/dev/null; then
+        if [ ! -d "$path" ]; then
+            tmux display-message "path not found: $path"
+            return
+        fi
+
         tmux new-session -d -s "$session_id" -c "$path"
     fi
 

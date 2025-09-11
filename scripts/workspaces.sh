@@ -42,7 +42,6 @@ function tmux_workspaces() {
         done
     fi
 
-
     local path_options=$(tmux show-option -gqv @tmux_workspaces_path)
     if [ -n "$path_options" ]; then
         IFS=":" read -r -a opts <<< "$path_options"
@@ -53,16 +52,25 @@ function tmux_workspaces() {
         done
     fi
 
-    local bind_opts=$(tmux show-options -gqv @tmux_workspaces_fzf_bind_options)
-    if [ -n "$bind_opts" ]; then
-        # Parse the variable into separate --bind arguments with single quotes
-        bind_args=$(echo "$bind_opts" | awk -F, '{for (i=1; i<=NF; i++) printf("--bind '\''%s'\'' ", $i)}')
-    fi
+    local fzf_command=("fzf")
 
     local fzf_opts=$(tmux show-option -gqv @tmux_workspaces_fzf_options)
+    read -ra fzf_opts_array <<< "$fzf_opts"
+    if [ ${#fzf_opts_array[@]} -gt 0 ]; then
+        fzf_command+=("${fzf_opts_array[@]}")
+    fi
 
-    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | eval "fzf $fzf_opts $bind_args")
-    new_session $session_id
+    local bind_opts=$(tmux show-options -gqv @tmux_workspaces_fzf_bind_options)
+    if [ -n "$bind_opts" ]; then
+        IFS=',' read -ra binds <<< "$bind_opts"
+        for bind in "${binds[@]}"; do
+            fzf_command+=("--bind" "$bind")
+        done
+    fi
+
+    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | "${fzf_command[@]}")
+    new_session "$session_id"
 }
+
 
 tmux_workspaces

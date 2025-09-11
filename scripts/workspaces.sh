@@ -25,14 +25,18 @@ function tmux_workspaces() {
     local workspaces=$(tmux list-sessions -F "#{session_name}" 2>/dev/null)
 
     local find_in_path_options=$(tmux show-option -gqv @tmux_workspaces_find_in_path)
+    local IFS
     if [ -n "$find_in_path_options" ]; then
         IFS=":" read -r -a opts <<< "$find_in_path_options"
-        for dir in "${opts[@]}"; do
+        for opt in "${opts[@]}"; do
+            IFS=, read -r dir pattern <<< "$opt"
+
             if [ -d "$dir" ]; then
-                workspaces+="\n$(find "$dir" -maxdepth 1 -type d 2>/dev/null)"
+                workspaces+="\n$(find "$dir" -maxdepth 1 -type d -name "${pattern:-*}" 2>/dev/null)"
             fi
         done
     fi
+
 
     local path_options=$(tmux show-option -gqv @tmux_workspaces_path)
     if [ -n "$path_options" ]; then

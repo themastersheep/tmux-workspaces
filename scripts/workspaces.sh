@@ -14,6 +14,11 @@ function new_session() {
     local session_id=${path//./_}
 
     if ! tmux has-session -t "$session_id" 2>/dev/null; then
+        if [ ! -d "$path" ]; then
+            tmux display-message "path not found: $path"
+            return
+        fi
+
         tmux new-session -d -s "$session_id" -c "$path"
     fi
 
@@ -25,11 +30,14 @@ function tmux_workspaces() {
     local workspaces=$(tmux list-sessions -F "#{session_name}" 2>/dev/null)
 
     local find_in_path_options=$(tmux show-option -gqv @tmux_workspaces_find_in_path)
+    local IFS
     if [ -n "$find_in_path_options" ]; then
         IFS=":" read -r -a opts <<< "$find_in_path_options"
-        for dir in "${opts[@]}"; do
+        for opt in "${opts[@]}"; do
+            IFS=, read -r dir pattern <<< "$opt"
+
             if [ -d "$dir" ]; then
-                workspaces+="\n$(find "$dir" -maxdepth 1 -type d 2>/dev/null)"
+                workspaces+="\n$(find "$dir" -maxdepth 1 -type d -name "${pattern:-*}" 2>/dev/null)"
             fi
         done
     fi
@@ -44,16 +52,25 @@ function tmux_workspaces() {
         done
     fi
 
-    local bind_opts=$(tmux show-options -gqv @tmux_workspaces_fzf_bind_options)
-    if [ -n "$bind_opts" ]; then
-        # Parse the variable into separate --bind arguments with single quotes
-        bind_args=$(echo "$bind_opts" | awk -F, '{for (i=1; i<=NF; i++) printf("--bind '\''%s'\'' ", $i)}')
-    fi
+    local fzf_command=("fzf")
 
     local fzf_opts=$(tmux show-option -gqv @tmux_workspaces_fzf_options)
+    read -ra fzf_opts_array <<< "$fzf_opts"
+    if [ ${#fzf_opts_array[@]} -gt 0 ]; then
+        fzf_command+=("${fzf_opts_array[@]}")
+    fi
 
-    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | eval "fzf $fzf_opts $bind_args")
-    new_session $session_id
+    local bind_opts=$(tmux show-options -gqv @tmux_workspaces_fzf_bind_options)
+    if [ -n "$bind_opts" ]; then
+        IFS=',' read -ra binds <<< "$bind_opts"
+        for bind in "${binds[@]}"; do
+            fzf_command+=("--bind" "$bind")
+        done
+    fi
+
+    local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | "${fzf_command[@]}")
+    new_session "$session_id"
 }
+
 
 tmux_workspaces

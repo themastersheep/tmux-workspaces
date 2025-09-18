@@ -62,10 +62,7 @@ function tmux_workspaces() {
 
     local bind_opts=$(tmux show-options -gqv @tmux_workspaces_fzf_bind_options)
     if [ -n "$bind_opts" ]; then
-        IFS=',' read -ra binds <<< "$bind_opts"
-        for bind in "${binds[@]}"; do
-            fzf_command+=("--bind" "$bind")
-        done
+        fzf_command+=("--bind" "$bind_opts")
     fi
 
     local session_id=$(echo -e "${workspaces}" | awk '!seen[$0]++' | "${fzf_command[@]}")

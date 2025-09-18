@@ -100,8 +100,7 @@ Example:
     set -g @tmux_workspaces_fzf_options "--reverse"
 
 * `@tmux_workspaces_fzf_bind_options`
-  * Configure `fzf` bind arguments
-  * This supports a comma delimited list of values, format: key:action
+  * Configure `fzf` bind argument (see "KEY/EVENT BINDINGS" in `fzf --man` for more info).
 
 Example:
 
